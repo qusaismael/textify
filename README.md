@@ -1,7 +1,6 @@
-# HD Binary Art Generator (Extended)
+# 🎨 HD Binary Art Generator
 
-
-HD Binary Art Generator (Extended) is a web-based tool that converts your photos into creative text art. Whether you prefer ASCII, binary (0/1), or emoji-based representations, this application processes your image **entirely on your device**—ensuring privacy and quick results.
+**HD Binary Art Generator** is a web-based tool that converts your photos into creative text art. Whether you prefer ASCII, binary (0/1), or emoji-based representations, this application processes your image **entirely on your device**—ensuring privacy and quick results.
 
 ## 🚀 Features
 
@@ -20,51 +19,71 @@ HD Binary Art Generator (Extended) is a web-based tool that converts your photos
 
 ### 🔹 1. Clone the Repository
 ```sh
-git clone https://github.com/your-username/Binary.git
-cd Binary
+git clone https://github.com/your-username/BinaryArtGenerator.git
+cd BinaryArtGenerator
 ```
-🔹 2. Open in Browser
 
-Simply open index.html in your browser. No server setup required.
+### 🔹 2. Open in Browser
+Simply open `index.html` in your browser. No server setup required.
 
-🔹 3. Usage Guide
-	•	Upload an Image: Drag & drop an image or click to select a file.
-	•	Adjust Settings: Use sliders to tweak resolution, brightness, contrast, and more.
-	•	Select Art Mode: Choose ASCII, Binary, or Emoji.
-	•	Generate Art: The app processes your image locally and displays the output.
-	•	Export/Share: Download as text/PNG or share via a link.
+### 🔹 3. Usage Guide
+1. **Upload an Image**: Drag & drop an image or click to select a file.
+2. **Adjust Settings**: Use sliders to tweak resolution, brightness, contrast, and more.
+3. **Select Art Mode**: Choose ASCII, Binary, or Emoji.
+4. **Generate Art**: The app processes your image locally and displays the output.
+5. **Export/Share**: Download as text/PNG or share via a link.
 
-⚙️ Settings & Customization
+---
 
-Art Modes
+## ⚙️ Settings & Customization
 
-Mode	Description
-ASCII	Converts the image into ASCII characters
-Binary	Uses 0 and 1 to generate an image-like structure
-Emoji	Uses emojis to create colorful representations
+### 🖼️ Art Modes
 
-Color Modes (ASCII Mode Only)
-	•	Original Colors
-	•	Custom Color
-	•	Black & White
-	•	Grayscale
+| Mode   | Description |
+|--------|------------|
+| ASCII  | Converts the image into ASCII characters |
+| Binary | Uses 0 and 1 to generate an image-like structure |
+| Emoji  | Uses emojis to create colorful representations |
 
-🛠 Dependencies
-	•	html2canvas - Converts ASCII output into PNG format.
-	•	Google Fonts:
-	•	Vazirmatn (General text)
-	•	Noto Sans Mono Arabic (ASCII output)
+### 🎨 Color Modes (ASCII Mode Only)
+- Original Colors  
+- Custom Color  
+- Black & White  
+- Grayscale  
 
-🏗️ Contributing
+---
 
-Contributions are welcome! 🚀 If you’d like to improve the project:
-	1.	Fork the repository
-	2.	Create a new branch (feature-new-feature)
-	3.	Commit your changes (git commit -m "Added new feature")
-	4.	Push to the branch (git push origin feature-new-feature)
-	5.	Open a Pull Request 🎉
+## 🛠 Dependencies
+- `html2canvas` - Converts ASCII output into PNG format.
+- **Google Fonts**:
+  - `Vazirmatn` (General text)
+  - `Noto Sans Mono Arabic` (ASCII output)
 
+---
 
-•	[@Qusaismael](https://x.com/Qusaismael) - Open-sourced this project.
+## 🏗️ Contributing
+
+Contributions are welcome! 🚀 To contribute:
+
+1. **Fork** the repository  
+2. **Create a new branch**:  
+   ```sh
+   git checkout -b feature-new-feature
+   ```
+3. **Commit your changes**:  
+   ```sh
+   git commit -m "Added new feature"
+   ```
+4. **Push to the branch**:  
+   ```sh
+   git push origin feature-new-feature
+   ```
+5. **Open a Pull Request** 🎉  
+
+---
+
+## 📌 Author
+
+- **[@Qusaismael](https://x.com/Qusaismael)** - Open-sourced this project.
 
 Enjoy creating your ASCII masterpieces! 🎨✨
