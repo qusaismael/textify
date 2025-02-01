@@ -22,7 +22,7 @@ HD Binary Art Generator (Extended) is a web-based tool that converts your photos
 ```sh
 git clone https://github.com/your-username/Binary.git
 cd Binary
-
+```
 🔹 2. Open in Browser
 
 Simply open index.html in your browser. No server setup required.
