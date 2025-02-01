@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlElement">
+<head>
+  <!-- Meta Information -->
+  <meta charset="UTF-8" />
+  <title data-i18n="appTitle">CONVERT YOUR PHOTOS INTO NUMBERS AND LETTERS!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- External CSS -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Vazirmatn for general text -->
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Noto Sans Mono Arabic for ASCII art output -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono+Arabic&display=swap" rel="stylesheet">
+</head>
+<body class="theme-neon">
+
+  <!-- Header Section -->
+  <header id="header">
+    <h1 id="appTitle" data-i18n="appTitle" aria-label="HD Binary Art Generator">
+      HD Binary Art Generator (Extended)
+    </h1>
+    <div id="languageContainer">
+      <label for="languageSelect" class="sr-only" data-i18n="languageSelectLabel">Select Language:</label>
+      <select id="languageSelect" aria-label="Select Language">
+        <option value="en">English</option>
+        <option value="ar">العربية</option>
+        <!-- Additional languages can be added here -->
+      </select>
+    </div>
+  </header>
+
+  <!-- Processing Note -->
+  <p id="processingNote" data-i18n="processingNote">All image processing is done locally on your device.</p>
+  <p data-i18n="uploadInstruction">Upload or drag-and-drop an image, adjust settings, and explore advanced features!</p>
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay">Processing...</div>
+
+  <!-- Drag & Drop Area -->
+  <div id="dragDropArea" aria-label="Drag and drop area" data-i18n="dragDropArea">
+    Drag & Drop an image here or <strong>click</strong> to select
+  </div>
+
+  <!-- Hidden File Input -->
+  <input
+    type="file"
+    id="imageInput"
+    accept="image/*"
+    aria-label="Image file input"
+    style="display: none;"
+  />
+
+  <!-- ASCII Art Output -->
+  <div id="output" aria-label="ASCII art output" tabindex="0"></div>
+
+  <!-- Original Image Canvas -->
+  <canvas id="canvas" aria-label="Original image canvas"></canvas>
+
+  <!-- Controls Section -->
+  <div id="controls">
+    <!-- Basic Adjustments Group -->
+    <div class="control-group">
+      <h3 data-i18n="basicAdjustments">Basic Adjustments</h3>
+      <div class="sub-control">
+        <button id="rotateBtn" aria-label="Rotate image button" data-i18n="rotateBtn">Rotate 90°</button>
+      </div>
+      <div class="sub-control">
+        <label for="resolution" id="resolutionLabel" class="tooltip" 
+               data-tooltip="Lower values = more detailed output" data-i18n="resolutionLabel">
+          Resolution: <span id="resolutionValue">100</span>
+        </label>
+        <input type="range" id="resolution" min="50" max="500" step="10" value="100">
+      </div>
+      <!-- Threshold Controls -->
+      <div class="sub-control" id="thresholdContainer">
+        <label for="threshold" id="thresholdLabel" data-i18n="thresholdLabel">
+          Threshold: <span id="thresholdValue">128</span>
+        </label>
+        <input type="range" id="threshold" min="0" max="255" step="1" value="128">
+      </div>
+      <div class="sub-control">
+        <label for="brightness" data-i18n="brightnessLabel">Brightness:
+          <span id="brightnessValue">0</span>
+        </label>
+        <input type="range" id="brightness" min="-100" max="100" step="1" value="0">
+        <br>
+        <label for="contrast" data-i18n="contrastLabel">Contrast:
+          <span id="contrastValue">0</span>
+        </label>
+        <input type="range" id="contrast" min="-100" max="100" step="1" value="0">
+      </div>
+    </div>
+
+    <!-- Art Mode Group -->
+    <div class="control-group">
+      <h3 data-i18n="artMode">Art Mode</h3>
+      <p data-i18n="selectRenderingStyle">Select rendering style:</p>
+      <select id="modeSelect">
+        <option value="ascii" selected data-i18n="ascii">ASCII</option>
+        <option value="binary" data-i18n="binary">Binary (0/1)</option>
+        <option value="emoji" data-i18n="emoji">Emoji ASCII</option>
+      </select>
+      <!-- Binary Mode Options -->
+      <div id="binaryOptions">
+        <label>
+          <span data-i18n="char0Label">Char for 0: </span>
+          <input type="text" id="char0" value="0" size="2">
+        </label>
+        <label>
+          <span data-i18n="color0Label">Color for 0: </span>
+          <input type="color" id="color0" value="#000000">
+        </label>
+        <br>
+        <label>
+          <span data-i18n="char1Label">Char for 1: </span>
+          <input type="text" id="char1" value="1" size="2">
+        </label>
+        <label>
+          <span data-i18n="color1Label">Color for 1: </span>
+          <input type="color" id="color1" value="#FFFFFF">
+        </label>
+      </div>
+    </div>
+
+    <!-- Color Mode Group (ASCII Only) -->
+    <div class="control-group" id="colorModeGroup">
+      <h3 data-i18n="colorMode">Color Mode (ASCII Exclusive)</h3>
+      <label>
+        <span data-i18n="colorMode">Color Mode (ASCII Exclusive): </span>
+        <select id="colorMode">
+          <option value="original" data-i18n="originalColors">Original Colors</option>
+          <option value="custom" data-i18n="customColor">Custom Color</option>
+          <option value="bw" data-i18n="blackWhite">Black & White</option>
+          <option value="grayscale" data-i18n="grayscale">Grayscale</option>
+        </select>
+      </label>
+      <input type="color" id="customColor" value="#00ff00" style="margin-left: 10px;" disabled> 
+      <span id="colorModeInfo" class="tooltip" data-tooltip="Color Mode is available only in ASCII art mode.">ℹ️</span>
+    </div>
+
+    <!-- View/History Group -->
+    <div class="control-group">
+      <h3 data-i18n="viewHistory">View/History</h3>
+      <div class="sub-control">
+        <label for="zoomRange" data-i18n="zoomLabel">Zoom:</label>
+        <input type="range" id="zoomRange" min="1" max="15" step="1" value="6">
+      </div>
+      <div class="sub-control">
+        <button id="undoBtn" data-i18n="undoBtn">Undo</button>
+        <button id="redoBtn" data-i18n="redoBtn">Redo</button>
+      </div>
+    </div>
+
+    <!-- Export & Share Group -->
+    <div class="control-group">
+      <h3 data-i18n="exportShare">Export & Share</h3>
+      <div class="sub-control">
+        <button id="downloadTextBtn" data-i18n="downloadTextBtn">Download Text</button>
+        <button id="downloadPNGBtn" data-i18n="downloadPNGBtn">Download PNG</button>
+      </div>
+      <div class="sub-control">
+        <button id="shareBtn" data-i18n="shareBtn">Share Link</button>
+        <input type="text" id="shareLink" placeholder="Shareable link" data-i18n-placeholder="shareLinkPlaceholder" readonly>
+      </div>
+    </div>
+  </div>
+
+  <!-- Donation Section -->
+  <div id="donationSection">
+    <h3 data-i18n="donate">Support the Project</h3>
+    <p data-i18n="donateMessage">If you enjoy using this tool, consider supporting it!</p>
+    <form action="https://www.paypal.me/l8rontop" method="post" target="_blank">
+      <button type="submit" id="paypalDonateBtn">
+        <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" 
+             alt="Donate with PayPal" />
+      </button>
+    </form>
+  </div>
+
+  <!-- External Scripts -->
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script src="translations.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
