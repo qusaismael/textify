@@ -55,9 +55,7 @@ Simply open `index.html` in your browser. No server setup required.
 
 ## 🛠 Dependencies
 - `html2canvas` - Converts ASCII output into PNG format.
-- **Google Fonts**:
-  - `Vazirmatn` (General text)
-  - `Noto Sans Mono Arabic` (ASCII output)
+- System font stacks (no external font downloads required).
 
 ---
 

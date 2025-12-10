@@ -638,7 +638,7 @@ function downloadAsPNG() {
     allowTaint: true,
     useCORS: true,
     onclone: (clonedDoc) => {
-      clonedDoc.getElementById('output').style.fontFamily = 'Noto Sans Mono Arabic, monospace'; // Ensure correct font
+      clonedDoc.getElementById('output').style.fontFamily = '"SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace'; // Ensure correct font
     }
   }).then(canvas => {
     const link = document.createElement("a");
