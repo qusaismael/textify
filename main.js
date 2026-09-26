@@ -109,6 +109,7 @@ dragDropArea.addEventListener('drop', e => {
 dragDropArea.addEventListener('click', () => {
   imageInput.click(); // Trigger file selection dialog
 });
+document.getElementById('chooseImage').addEventListener('click', () => imageInput.click());
 
 // File Input Change Event
 imageInput.addEventListener("change", e => {
@@ -248,25 +249,26 @@ document.addEventListener("keydown", e => {
 function handleImage(file) {
   const preview = document.createElement('div');
   preview.className = 'file-preview';
-  preview.innerHTML = `
-    ${file.name} (${(file.size/1024).toFixed(1)}KB)
-    <button class="remove-file" aria-label="Remove file">×</button>
-  `;
-  
-  dragDropArea.innerHTML = '';
-  dragDropArea.appendChild(preview);
-
-  // Remove File Button Click Event
-  preview.querySelector('.remove-file').addEventListener('click', () => {
+  preview.append(document.createTextNode(`${file.name} (${(file.size / 1024).toFixed(1)}KB) `));
+  const remove = document.createElement('button');
+  remove.type = 'button';
+  remove.className = 'remove-file';
+  remove.setAttribute('aria-label', 'Remove file');
+  remove.textContent = '×';
+  preview.append(remove);
+  dragDropArea.replaceChildren(preview);
+  remove.addEventListener('click', event => {
+    event.stopPropagation();
     storedImage = null;
-    dragDropArea.innerHTML = 'Drag & Drop an image here or click to select';
-    output.innerHTML = '';
+    dragDropArea.textContent = 'Drag & Drop an image here or click to select';
+    output.replaceChildren();
     showToast("File removed.", 'info');
   });
 
   const imgURL = URL.createObjectURL(file);
   const img = new Image();
   img.onload = () => {
+    URL.revokeObjectURL(imgURL);
     if (img.width > MAX_IMAGE_WIDTH || img.height > MAX_IMAGE_HEIGHT) {
       showToast(`Image is too large (max is ${MAX_IMAGE_WIDTH}x${MAX_IMAGE_HEIGHT}).`, 'warning');
       return;
@@ -278,6 +280,7 @@ function handleImage(file) {
     showToast("Image loaded successfully!", 'success');
   };
   img.onerror = () => {
+    URL.revokeObjectURL(imgURL);
     showToast("Could not load image. Please try another file.", 'error');
   };
   img.src = imgURL;
@@ -618,9 +621,11 @@ function toggleArtModeOptions() {
 function downloadAsText(text) {
   const blob = new Blob([text], { type: "text/plain" });
   const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
+  const objectURL = URL.createObjectURL(blob);
+  link.href = objectURL;
   link.download = "ascii-art.txt";
   link.click();
+  setTimeout(() => URL.revokeObjectURL(objectURL), 1000);
   showToast("Text file downloaded.", 'success');
 }
 
@@ -754,7 +759,7 @@ function checkSharedArt() {
     try {
       const decoded = decodeURIComponent(escape(atob(urlParams.get('art'))));
       asciiArtText = decoded;
-      output.innerHTML = asciiArtText.replace(/\n/g, '<br>');
+      output.textContent = asciiArtText;
       showToast("Shared ASCII art loaded!", 'success');
     } catch (error) {
       console.error("Error decoding shared art:", error);
