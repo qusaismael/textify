@@ -268,6 +268,7 @@ function handleImage(file) {
   const imgURL = URL.createObjectURL(file);
   const img = new Image();
   img.onload = () => {
+    URL.revokeObjectURL(imgURL);
     if (img.width > MAX_IMAGE_WIDTH || img.height > MAX_IMAGE_HEIGHT) {
       showToast(`Image is too large (max is ${MAX_IMAGE_WIDTH}x${MAX_IMAGE_HEIGHT}).`, 'warning');
       return;
@@ -279,6 +280,7 @@ function handleImage(file) {
     showToast("Image loaded successfully!", 'success');
   };
   img.onerror = () => {
+    URL.revokeObjectURL(imgURL);
     showToast("Could not load image. Please try another file.", 'error');
   };
   img.src = imgURL;
@@ -619,9 +621,11 @@ function toggleArtModeOptions() {
 function downloadAsText(text) {
   const blob = new Blob([text], { type: "text/plain" });
   const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
+  const objectURL = URL.createObjectURL(blob);
+  link.href = objectURL;
   link.download = "ascii-art.txt";
   link.click();
+  setTimeout(() => URL.revokeObjectURL(objectURL), 1000);
   showToast("Text file downloaded.", 'success');
 }
 
