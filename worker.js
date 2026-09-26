@@ -1,3 +1,9 @@
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[ch]);
+}
+
 // Listen for messages from the main thread
 self.onmessage = (e) => {
   const {
@@ -73,10 +79,10 @@ self.onmessage = (e) => {
       if (mode === "binary") {
         // Binary mode: Use char0 and char1 based on threshold
         if (brightnessVal >= threshold) {
-          htmlOutput += `<span style="color:${col1}">${char1}</span>`;
+          htmlOutput += `<span style="color:${col1}">${escapeHtml(char1)}</span>`;
           rawTextOutput += char1;
         } else {
-          htmlOutput += `<span style="color:${col0}">${char0}</span>`;
+          htmlOutput += `<span style="color:${col0}">${escapeHtml(char0)}</span>`;
           rawTextOutput += char0;
         }
       } 
