@@ -87,6 +87,11 @@ body[dir="rtl"] #languageContainer {
   border-style: solid;
 }
 
+#chooseImage:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+
 /* Controls Container Styling */
 #controls {
   margin: 20px 0;

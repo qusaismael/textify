@@ -25,3 +25,23 @@ test('binary glyphs stay literal after worker render', async ({ page }) => {
   await expect(page.locator('#output img')).toHaveCount(0);
   expect(await page.evaluate(() => window.glyphExecuted)).toBeUndefined();
 });
+
+test('file picker is keyboard-accessible and filename stays literal', async ({ page }) => {
+  await page.goto('/');
+  const chooser = page.getByRole('button', { name: 'Choose image' });
+  await chooser.focus();
+  const [picker] = await Promise.all([
+    page.waitForEvent('filechooser'), page.keyboard.press('Enter')
+  ]);
+  const png = await page.evaluate(() => {
+    const c = document.createElement('canvas'); c.width = c.height = 1;
+    return c.toDataURL('image/png').split(',')[1];
+  });
+  const name = '<img src=x onerror="window.filenameExecuted=1">.png';
+  await picker.setFiles({ name, mimeType: 'image/png', buffer: Buffer.from(png, 'base64') });
+  const preview = page.locator('.file-preview');
+  await expect(preview).toContainText(name);
+  await expect(preview.locator('img')).toHaveCount(0);
+  expect(await page.evaluate(() => window.filenameExecuted)).toBeUndefined();
+  await preview.getByRole('button', { name: 'Remove file' }).click();
+});

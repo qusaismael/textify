@@ -109,6 +109,7 @@ dragDropArea.addEventListener('drop', e => {
 dragDropArea.addEventListener('click', () => {
   imageInput.click(); // Trigger file selection dialog
 });
+document.getElementById('chooseImage').addEventListener('click', () => imageInput.click());
 
 // File Input Change Event
 imageInput.addEventListener("change", e => {
@@ -248,19 +249,19 @@ document.addEventListener("keydown", e => {
 function handleImage(file) {
   const preview = document.createElement('div');
   preview.className = 'file-preview';
-  preview.innerHTML = `
-    ${file.name} (${(file.size/1024).toFixed(1)}KB)
-    <button class="remove-file" aria-label="Remove file">×</button>
-  `;
-  
-  dragDropArea.innerHTML = '';
-  dragDropArea.appendChild(preview);
-
-  // Remove File Button Click Event
-  preview.querySelector('.remove-file').addEventListener('click', () => {
+  preview.append(document.createTextNode(`${file.name} (${(file.size / 1024).toFixed(1)}KB) `));
+  const remove = document.createElement('button');
+  remove.type = 'button';
+  remove.className = 'remove-file';
+  remove.setAttribute('aria-label', 'Remove file');
+  remove.textContent = '×';
+  preview.append(remove);
+  dragDropArea.replaceChildren(preview);
+  remove.addEventListener('click', event => {
+    event.stopPropagation();
     storedImage = null;
-    dragDropArea.innerHTML = 'Drag & Drop an image here or click to select';
-    output.innerHTML = '';
+    dragDropArea.textContent = 'Drag & Drop an image here or click to select';
+    output.replaceChildren();
     showToast("File removed.", 'info');
   });
 
