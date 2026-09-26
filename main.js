@@ -754,7 +754,7 @@ function checkSharedArt() {
     try {
       const decoded = decodeURIComponent(escape(atob(urlParams.get('art'))));
       asciiArtText = decoded;
-      output.innerHTML = asciiArtText.replace(/\n/g, '<br>');
+      output.textContent = asciiArtText;
       showToast("Shared ASCII art loaded!", 'success');
     } catch (error) {
       console.error("Error decoding shared art:", error);
