@@ -28,6 +28,7 @@
   --bg-panel: rgba(16, 20, 28, 0.72);
   --line: #222a37;
   --line-strong: #354154;
+  --line-stage: #4a5872;
   --ink: #e6ebf4;
   --ink-dim: #97a1b3;
   --brand: var(--neon-blue);
@@ -149,7 +150,7 @@ body > p {
     rgba(189, 0, 255, 0.05) 55%,
     transparent 80%
   );
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: var(--t-base);
   color: var(--ink);
   cursor: pointer;
@@ -336,7 +337,7 @@ input[type="color"]:hover {
   font-size: 12px;
   line-height: 12px;
   margin: 24px auto;
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--line-stage);
   border-radius: 10px;
   display: inline-block;
   overflow: auto;
@@ -364,7 +365,7 @@ body[dir="rtl"] #output {
   display: block;
   margin: 24px auto;
   max-width: 90%;
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-stage);
   border-radius: 10px;
 
   /* Ensure canvas operates in LTR */
@@ -637,6 +638,19 @@ span[id$="Value"] {
 
 #shareLink {
   flex: 1 1 160px;
+}
+
+/* Color Mode row: swatches and select share one baseline */
+#colorModeGroup label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+}
+
+#colorModeGroup input[type="color"],
+#colorModeInfo {
+  vertical-align: middle;
 }
 
 /* Donation Section */
