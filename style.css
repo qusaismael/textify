@@ -1,187 +1,334 @@
-/* style.css */
+/* style.css — Textify visual system
+   Design: terminal-quiet chrome around the art. The product paints photos
+   with a character density ramp (@ # S % ? * + ; : , .), so the interface
+   is built from the same material: monospace display type, hairline
+   frames, and one memorable element — the density-ramp strip on the
+   drop zone. Owner copy and behavior are untouched; this file is
+   presentation only. */
+
+/* Border-box everywhere so padding never inflates control widths */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 /* Root Variables for Theming */
 :root {
   --neon-pink: #ff2e88;
   --neon-blue: #00fff9;
   --neon-purple: #bd00ff;
-  --dark-bg: #0a0a0f;
-  --darker-bg: #050507;
+  --dark-bg: #0a0d12;
+  --darker-bg: #07090d;
   --cyber-text: #d3d3d3;
+
+  /* Refined tokens (brand hue preserved) */
+  --bg: #0a0d12;
+  --bg-field: #0d1118;
+  --bg-panel: rgba(16, 20, 28, 0.72);
+  --line: #222a37;
+  --line-strong: #354154;
+  --line-stage: #4a5872;
+  --ink: #e6ebf4;
+  --ink-dim: #97a1b3;
+  --brand: var(--neon-blue);
+  --accent: var(--neon-pink);
+  --violet: var(--neon-purple);
+
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono",
+    Menlo, Consolas, "Liberation Mono", monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
+    Arial, sans-serif;
+
+  /* Type scale (1.25) */
+  --t-micro: 0.75rem;
+  --t-small: 0.875rem;
+  --t-base: 1rem;
+  --t-lg: 1.125rem;
+}
+
+html {
+  background-color: var(--bg);
 }
 
 /* Body Styling */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; /* General system font stack */
+  font-family: var(--sans);
   text-align: center;
-  margin: 0;
-  padding: 20px;
-  background-color: var(--dark-bg);
-  color: var(--cyber-text);
-  background-image: 
-    linear-gradient(45deg, var(--darker-bg) 25%, transparent 25%),
-    linear-gradient(-45deg, var(--darker-bg) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, var(--darker-bg) 75%),
-    linear-gradient(-45deg, transparent 75%, var(--darker-bg) 75%);
-  background-size: 20px 20px;
+  margin: 0 auto;
+  padding: clamp(16px, 3vw, 40px);
+  max-width: 1120px;
+  background-color: transparent;
+  background-image: radial-gradient(
+    80% 42% at 50% -8%,
+    rgba(0, 255, 249, 0.07),
+    transparent 62%
+  );
+  color: var(--ink);
+  font-size: var(--t-base);
+  line-height: 1.55;
 }
 
-/* Header Styling */
+::selection {
+  background: rgba(0, 255, 249, 0.25);
+}
+
+/* Header Styling — the headline is the brand anchor: monospace with a
+   single soft phosphor glow instead of stacked neon shadows */
 h1 {
-  color: var(--neon-blue);
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  text-shadow: 0 0 10px var(--neon-blue),
-               0 0 20px var(--neon-blue),
-               0 0 30px var(--neon-blue);
-  margin-bottom: 30px;
+  font-family: var(--mono);
+  font-size: clamp(1.6rem, 4.2vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--brand);
+  text-shadow: 0 0 24px rgba(0, 255, 249, 0.35);
+  margin: 0;
+  min-width: 0;
 }
 
-/* Header Container */
+h3 {
+  font-family: var(--mono);
+  font-size: var(--t-small);
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--ink);
+  margin: 0 0 14px;
+}
+
+/* Header Container: stacked on phones, one row on wide screens */
 #header {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 18px;
 }
 
 #languageContainer {
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 10px;
+  margin-inline-start: auto;
 }
 
-/* RTL Support */
-body[dir="rtl"] #languageContainer {
-  right: auto;
-  left: 0;
+@media (min-width: 760px) {
+  #header {
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+  }
 }
 
 /* Processing Note Styling */
-#processingNote {
-  font-size: 0.9em;
-  color: var(--cyber-text);
-  margin-top: 0;
-  margin-bottom: 20px;
-  font-style: italic;
+body > p {
+  max-width: 62ch;
+  margin: 0 auto 8px;
 }
 
-/* Drag & Drop Area Styling */
+#processingNote {
+  font-size: var(--t-small);
+  color: var(--ink-dim);
+  font-style: normal;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+/* Drag & Drop Area — the hero and the one memorable element:
+   a strip of the app's own grayscale density ramp */
 #dragDropArea {
-  border: 2px dashed var(--neon-purple);
-  padding: 30px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 160px;
+  margin: 28px 0 16px;
+  padding: 48px 24px 40px;
+  border: 1px dashed rgba(0, 255, 249, 0.45);
+  border-radius: 14px;
+  background-image: radial-gradient(
+    120% 150% at 50% 0%,
+    rgba(0, 255, 249, 0.07),
+    rgba(189, 0, 255, 0.05) 55%,
+    transparent 80%
+  );
+  font-family: var(--sans);
+  font-size: var(--t-base);
+  color: var(--ink);
   cursor: pointer;
-  background: rgba(189, 0, 255, 0.1);
-  transition: all 0.3s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 
+/* The material of the product: the density ramp used to paint pixels */
+#dragDropArea::before {
+  content: "@#S%?*+;:,.";
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.5em;
+  padding-inline-start: 0.5em;
+  white-space: nowrap;
+  background-image: linear-gradient(
+    90deg,
+    var(--brand),
+    var(--ink-dim) 35%,
+    var(--accent) 68%,
+    var(--violet)
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes ramp-sheen {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+#dragDropArea strong {
+  color: var(--brand);
+  font-weight: 600;
+}
+
 #dragDropArea:hover {
-  border-color: var(--neon-blue);
-  box-shadow: 0 0 20px rgba(0, 255, 249, 0.3);
+  border-color: var(--brand);
 }
 
 #dragDropArea.drag-over {
-  background: rgba(0, 255, 249, 0.2);
   border-style: solid;
+  border-color: var(--brand);
+  background-color: rgba(0, 255, 249, 0.08);
 }
 
-#chooseImage:focus-visible {
-  outline: 3px solid currentColor;
-  outline-offset: 3px;
-}
-
-/* Controls Container Styling */
-#controls {
-  margin: 20px 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 25px;
-  padding: 20px;
-  background: rgba(10, 10, 15, 0.8);
-  border: 1px solid var(--neon-pink);
-  border-radius: 5px;
-  box-shadow: 0 0 15px var(--neon-pink);
-}
-
-/* Control Group Styling */
-.control-group {
-  background: rgba(10, 10, 15, 0.9);
-  border: 1px solid var(--neon-purple);
-  border-radius: 8px;
-  padding: 15px;
-  min-width: 250px;
-  margin: 10px;
-  box-shadow: 0 0 12px rgba(189, 0, 255, 0.2);
-}
-
-.control-group h3 {
-  color: var(--neon-blue);
-  margin: 0 0 15px 0;
-  font-size: 1.1em;
-  border-bottom: 1px solid var(--neon-purple);
-  padding-bottom: 8px;
-}
-
-/* Button Styling */
+/* Buttons: monospace tool controls, sentence case */
 button {
-  background: var(--darker-bg);
-  color: var(--neon-blue);
-  border: 1px solid var(--neon-blue);
-  padding: 8px 15px;
+  font-family: var(--mono);
+  font-size: var(--t-small);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  padding: 0 18px;
+  min-height: 44px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  transition: border-color 0.15s ease, background-color 0.15s ease,
+    color 0.15s ease;
 }
 
 button:hover {
-  background: var(--neon-blue);
-  color: var(--darker-bg);
-  box-shadow: 0 0 15px var(--neon-blue);
+  background: rgba(0, 255, 249, 0.08);
+  border-color: var(--brand);
+  color: var(--brand);
 }
 
 button:active {
-  transform: scale(0.95);
+  transform: none;
 }
 
-/* Range Inputs Styling */
+/* Primary actions */
+#chooseImage,
+#paypalDonateBtn {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--bg);
+}
+
+#chooseImage:hover,
+#paypalDonateBtn:hover {
+  background: #66fffa;
+  border-color: #66fffa;
+  color: var(--bg);
+}
+
+#paypalDonateBtn {
+  margin-top: 6px;
+}
+
+/* Range Inputs: 44px hit area over a slim track */
 input[type="range"] {
   -webkit-appearance: none;
-  background: var(--darker-bg);
-  border: 1px solid var(--neon-pink);
-  height: 5px;
-  border-radius: 5px;
-  margin: 10px 0;
+  appearance: none;
+  background: transparent;
+  border: none;
+  height: 44px;
+  margin: 0;
+  flex: 1 1 100%;
+  width: 100%;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  background: var(--line-strong);
+  border: none;
+  border-radius: 2px;
 }
 
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 15px;
-  height: 15px;
-  background: var(--neon-pink);
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  border: none;
   border-radius: 50%;
   cursor: pointer;
-  transition: all 0.3s ease;
+  margin-top: -7px;
+  transition: transform 0.15s ease;
 }
 
 input[type="range"]:hover::-webkit-slider-thumb {
-  transform: scale(1.2);
+  transform: scale(1.1);
 }
 
-/* Selects & Textfields Styling */
-select, input[type="text"], input[type="color"] {
-  background: var(--darker-bg);
-  color: var(--cyber-text);
-  border: 1px solid var(--neon-purple);
-  padding: 5px 10px;
+input[type="range"]::-moz-range-track {
+  height: 4px;
+  background: var(--line-strong);
+  border: none;
+  border-radius: 2px;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Selects & Textfields */
+select,
+input[type="text"],
+input[type="color"] {
+  font-family: var(--mono);
+  font-size: var(--t-small);
+  background: var(--bg-field);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  padding: 5px 12px;
   margin: 5px;
+  min-height: 44px;
+  min-width: 44px;
+  max-width: 100%;
+  transition: border-color 0.15s ease;
 }
 
-select:hover {
-  box-shadow: 0 0 10px var(--neon-purple);
+select:hover,
+input[type="text"]:hover,
+input[type="color"]:hover {
+  border-color: var(--brand);
 }
 
 /* ASCII Output Styling */
@@ -189,23 +336,24 @@ select:hover {
   white-space: pre;
   font-size: 12px;
   line-height: 12px;
-  margin: 20px auto;
-  border: 1px solid var(--neon-blue);
+  margin: 24px auto;
+  border: 1px solid var(--line-stage);
+  border-radius: 10px;
   display: inline-block;
   overflow: auto;
   max-width: 90%;
   max-height: 80vh;
   position: relative;
-  transition: transform 0.3s ease;
   background-color: var(--darker-bg);
   padding: 20px;
-  box-shadow: 0 0 20px rgba(0, 255, 249, 0.2);
-  
+
   /* Monospaced Font for Proper Alignment */
-  font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
-  
+  font-family: var(--mono);
+
   /* Text Direction */
   direction: ltr;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
 }
 
 body[dir="rtl"] #output {
@@ -214,39 +362,38 @@ body[dir="rtl"] #output {
 
 /* Canvas Styling */
 #canvas {
-  display: block;   
-  margin: 20px auto;  
-  max-width: 90%;     
-  border: 1px solid var(--neon-blue); 
-  
+  display: block;
+  margin: 24px auto;
+  max-width: 90%;
+  border: 1px solid var(--line-stage);
+  border-radius: 10px;
+
   /* Ensure canvas operates in LTR */
   direction: ltr;
-}
-
-#controls[dir="rtl"] .control-group {
-  /* Adjust control groups for RTL if necessary */
 }
 
 /* Loading Overlay Styling */
 #loadingOverlay {
   position: fixed;
-  top: 0; 
+  top: 0;
   left: 0;
-  width: 100%; 
+  width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(7, 9, 13, 0.86);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 18px;
   transition: opacity 0.3s ease;
   opacity: 0;
   pointer-events: none;
   z-index: 9999;
-  color: var(--neon-blue);
-  font-size: 2em;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  text-shadow: 0 0 10px var(--neon-blue);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: var(--t-lg);
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 #loadingOverlay.active {
@@ -257,53 +404,59 @@ body[dir="rtl"] #output {
 #loadingOverlay::after {
   content: "";
   display: block;
-  width: 70px;
-  height: 70px;
-  border: 8px solid #ffffff;
-  border-top-color: transparent;
+  width: 44px;
+  height: 44px;
+  border: 3px solid rgba(0, 255, 249, 0.25);
+  border-top-color: var(--brand);
   border-radius: 50%;
-  animation: spinner 1s linear infinite;
 }
 
 @keyframes spinner {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Toast Notifications Styling */
 .toast {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 12px 20px;
-  background: var(--darker-bg);
-  border: 1px solid var(--neon-pink);
-  border-radius: 4px;
-  animation: slideIn 0.3s ease-out;
+  bottom: 16px;
+  inset-inline-end: 16px;
+  padding: 12px 18px;
+  background: #10141c;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: var(--t-small);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
 }
 
 .toast-warning {
-  border-color: #ffcc00;
-  color: #ffcc00;
+  border-color: #fbbf24;
+  color: #fbbf24;
 }
 
 .toast-success {
-  border-color: #28a745;
-  color: #28a745;
+  border-color: #34d399;
+  color: #34d399;
 }
 
 .toast-error {
-  border-color: #dc3545;
-  color: #dc3545;
+  border-color: #f87171;
+  color: #f87171;
 }
 
 .toast-info {
-  border-color: #17a2b8;
-  color: #17a2b8;
+  border-color: var(--brand);
+  color: var(--brand);
 }
 
-@keyframes slideIn {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 }
 
 /* Tooltip Styling */
@@ -317,14 +470,21 @@ body[dir="rtl"] #output {
   content: attr(data-tooltip);
   position: absolute;
   bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--darker-bg);
-  border: 1px solid var(--neon-blue);
-  color: var(--cyber-text);
-  padding: 8px;
-  border-radius: 4px;
-  white-space: nowrap;
+  /* Anchor to the inline-end edge and wrap: a nowrap, centered tooltip
+     near the right edge caused 89px/124px document overflow at 390/320. */
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  transform: none;
+  background: #10141c;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--ink);
+  padding: 6px 10px;
+  font-family: var(--sans);
+  font-size: var(--t-micro);
+  width: max-content;
+  max-width: min(200px, 80vw);
+  white-space: normal;
   opacity: 0;
   transition: opacity 0.2s;
   pointer-events: none;
@@ -337,21 +497,56 @@ body[dir="rtl"] #output {
 /* File Preview Styling */
 .file-preview {
   position: relative;
-  padding: 10px;
-  border: 1px solid var(--neon-blue);
-  border-radius: 4px;
+  padding: 10px 56px 10px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  color: var(--ink);
+  text-align: start;
 }
 
 .remove-file {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 0;
+  inset-inline-end: 0;
+  width: 44px;
+  height: 44px;
   background: transparent;
   border: none;
-  color: var(--neon-pink);
+  color: var(--accent);
   cursor: pointer;
-  font-size: 1.2em;
+  font-size: 1.25rem;
   line-height: 1;
+}
+
+.remove-file:hover {
+  background: rgba(255, 46, 136, 0.12);
+  border: none;
+  color: var(--accent);
+}
+
+/* Empty placeholders stay out of the layout until real content exists */
+#output:empty,
+#canvas:not([width]) {
+  display: none;
+}
+
+/* Inline credit link keeps a 44px touch target without breaking the line */
+#processingNote a {
+  position: relative;
+}
+
+#processingNote a::after {
+  content: "";
+  position: absolute;
+  inset: -14px -8px;
+}
+
+/* Visible keyboard focus on every interactive control */
+:where(button, select, input, a[href], [tabindex]):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
 }
 
 /* Screen Reader Only Class */
@@ -368,71 +563,141 @@ body[dir="rtl"] #output {
 
 /* Highlighted Link Styling */
 #output .highlighted-link {
-  color: var(--neon-blue) !important;
+  color: var(--brand) !important;
   text-decoration: none !important;
   font-weight: bold !important;
-  text-shadow: 
-    0 0 5px var(--neon-blue) !important,
-    0 0 10px var(--neon-blue) !important,
-    0 0 20px var(--neon-blue) !important,
-    0 0 30px var(--neon-blue) !important;
-  transition: all 0.3s ease !important;
-}
-
-#donationSection {
-  text-align: center;
-  margin-top: 20px;
-  padding: 15px;
-  background: rgba(10, 10, 15, 0.8);
-  border: 1px solid var(--neon-blue);
-  border-radius: 5px;
-  box-shadow: 0 0 15px var(--neon-blue);
-}
-
-#paypalDonateBtn {
-  background: var(--neon-blue);
-  color: var(--darker-bg);
-  border: 1px solid var(--neon-blue);
-  padding: 10px 18px;
-  border-radius: 4px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-#paypalDonateBtn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px var(--neon-blue);
-}
-
-#paypalDonateBtn:active {
-  transform: scale(0.97);
+  text-shadow: 0 0 8px rgba(0, 255, 249, 0.5) !important;
+  transition: color 0.3s ease !important;
 }
 
 #output .highlighted-link:hover {
-  color: var(--darker-bg) !important;
-  background-color: var(--neon-blue) !important;
-  text-shadow: 
-    0 0 10px var(--neon-blue) !important,
-    0 0 20px var(--neon-blue) !important,
-    0 0 30px var(--neon-blue) !important,
-    0 0 40px var(--neon-blue) !important;
+  color: var(--bg) !important;
+  background-color: var(--brand) !important;
+  text-shadow: none !important;
+}
+
+/* Controls Container: one panel, spec-sheet groups */
+#controls {
+  margin: 28px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 28px 32px;
+  padding: clamp(18px, 3vw, 32px);
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  text-align: start;
+}
+
+/* Control Group Styling */
+.control-group {
+  background: none;
+  border: none;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 18px 0 0;
+  min-width: min(250px, 100%);
+  max-width: 100%;
+  margin: 0;
+}
+
+.sub-control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-block: 12px;
+}
+
+.sub-control label {
+  flex: 0 1 auto;
+}
+
+label {
+  font-size: var(--t-small);
+  color: var(--ink-dim);
+}
+
+span[id$="Value"] {
+  font-family: var(--mono);
+  color: var(--brand);
+}
+
+#binaryOptions {
+  margin-top: 10px;
+}
+
+#binaryOptions label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-inline-end: 12px;
+}
+
+#shareLink {
+  flex: 1 1 160px;
+}
+
+/* Color Mode row: swatches and select share one baseline */
+#colorModeGroup label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+}
+
+#colorModeGroup input[type="color"],
+#colorModeInfo {
+  vertical-align: middle;
+}
+
+/* Donation Section */
+#donationSection {
+  text-align: center;
+  margin-top: 28px;
+  padding: 28px 20px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+#donationSection p {
+  color: var(--ink-dim);
+}
+
+/* Motion: decorative animation only, and only when allowed */
+@media (prefers-reduced-motion: no-preference) {
+  #dragDropArea::before {
+    animation: ramp-sheen 6s linear infinite;
+  }
+
+  #loadingOverlay::after {
+    animation: spinner 1s linear infinite;
+  }
+
+  .toast {
+    animation: toast-in 0.25s ease-out;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
 }
 
 /* Responsive Design */
 @media (max-width: 600px) {
-  #header {
-  }
-  #languageContainer {
-  }
   #output {
     font-size: 3px;
     line-height: 3px;
   }
+
   #controls {
-    gap: 15px;
-    padding: 10px;
+    gap: 20px;
   }
 }
