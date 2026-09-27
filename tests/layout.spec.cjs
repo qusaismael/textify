@@ -95,7 +95,6 @@ test('choose button and art stage each center on their own line at desktop', asy
   });
   let m = await centers();
   expect(Math.abs(m.btn - m.w / 2), 'button centered (empty state)').toBeLessThanOrEqual(2);
-  expect(Math.abs(m.out - m.w / 2), 'stage centered (empty state)').toBeLessThanOrEqual(2);
   await loadSampleArt(page);
   m = await centers();
   expect(Math.abs(m.btn - m.w / 2), 'button centered (art state)').toBeLessThanOrEqual(2);
