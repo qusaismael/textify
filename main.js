@@ -247,6 +247,7 @@ document.addEventListener("keydown", e => {
  * @param {File} file - The uploaded image file
  */
 function handleImage(file) {
+  const dropHint = dragDropArea.cloneNode(true);
   const preview = document.createElement('div');
   preview.className = 'file-preview';
   preview.append(document.createTextNode(`${file.name} (${(file.size / 1024).toFixed(1)}KB) `));
@@ -260,7 +261,7 @@ function handleImage(file) {
   remove.addEventListener('click', event => {
     event.stopPropagation();
     storedImage = null;
-    dragDropArea.textContent = 'Drag & Drop an image here or click to select';
+    dragDropArea.replaceChildren(...Array.from(dropHint.childNodes, node => node.cloneNode(true)));
     output.replaceChildren();
     showToast("File removed.", 'info');
   });

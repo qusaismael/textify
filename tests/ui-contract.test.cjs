@@ -16,3 +16,10 @@ test('preview filename is inserted as text, never parsed as HTML', () => {
   assert.match(previewCode, /document\.createTextNode\(`\$\{file\.name\}/);
   assert.match(previewCode, /dragDropArea\.replaceChildren\(preview\)/);
 });
+
+test('file removal restores the original localized drop hint markup', () => {
+  const removal = main.slice(main.indexOf("remove.addEventListener('click'"), main.indexOf('const imgURL'));
+  assert.doesNotMatch(removal, /dragDropArea\.textContent\s*=/);
+  assert.match(main, /dragDropArea\.cloneNode\(true\)/, 'capture a hint template at load');
+  assert.match(removal, /dragDropArea\.replaceChildren\(\.\.\./, 'restore from template children');
+});

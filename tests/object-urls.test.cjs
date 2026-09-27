@@ -17,7 +17,7 @@ test('uploaded image object URL is revoked on load, error, and oversize', () => 
     class FakeImage {
       constructor() { this.width = outcome === 'oversize' ? 2001 : 1; this.height = 1; images.push(this); }
     }
-    const element = () => ({ append() {}, setAttribute() {}, addEventListener() {}, replaceChildren() {} });
+    const element = () => ({ append() {}, setAttribute() {}, addEventListener() {}, replaceChildren() {}, cloneNode() { return element(); }, childNodes: [] });
     const context = {
       document: { createElement: element, createTextNode: value => ({ textContent: value }) },
       dragDropArea: element(), output: element(),
