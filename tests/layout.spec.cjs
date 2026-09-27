@@ -82,3 +82,22 @@ test('keyboard focus is visible', async ({ page }) => {
     expect(outline.color, `${id} outline color`).not.toBe('transparent');
   }
 });
+
+test('choose button and art stage each center on their own line at desktop', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+  const centers = () => page.evaluate(() => {
+    const cx = sel => {
+      const r = document.querySelector(sel).getBoundingClientRect();
+      return r.left + r.width / 2;
+    };
+    return { btn: cx('#chooseImage'), out: cx('#output'), w: document.documentElement.clientWidth };
+  });
+  let m = await centers();
+  expect(Math.abs(m.btn - m.w / 2), 'button centered (empty state)').toBeLessThanOrEqual(2);
+  expect(Math.abs(m.out - m.w / 2), 'stage centered (empty state)').toBeLessThanOrEqual(2);
+  await loadSampleArt(page);
+  m = await centers();
+  expect(Math.abs(m.btn - m.w / 2), 'button centered (art state)').toBeLessThanOrEqual(2);
+  expect(Math.abs(m.out - m.w / 2), 'stage centered (art state)').toBeLessThanOrEqual(2);
+});

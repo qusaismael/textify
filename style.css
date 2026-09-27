@@ -333,6 +333,8 @@ input[type="color"]:hover {
 
 /* ASCII Output Styling */
 #output {
+  display: block;
+  width: fit-content;
   white-space: pre;
   font-size: 12px;
   line-height: 12px;
