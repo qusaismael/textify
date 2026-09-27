@@ -79,10 +79,10 @@ self.onmessage = (e) => {
       if (mode === "binary") {
         // Binary mode: Use char0 and char1 based on threshold
         if (brightnessVal >= threshold) {
-          htmlOutput += `<span style="color:${col1}">${escapeHtml(char1)}</span>`;
+          htmlOutput += `<span style="color:${safeColor(col1, '#ffffff')}">${escapeHtml(char1)}</span>`;
           rawTextOutput += char1;
         } else {
-          htmlOutput += `<span style="color:${col0}">${escapeHtml(char0)}</span>`;
+          htmlOutput += `<span style="color:${safeColor(col0, '#000000')}">${escapeHtml(char0)}</span>`;
           rawTextOutput += char0;
         }
       } 
@@ -96,7 +96,7 @@ self.onmessage = (e) => {
         let charColor = `rgb(${r}, ${g}, ${b})`; // default "original"
 
         if (colorMode === 'custom') {
-          charColor = customColor;
+          charColor = safeColor(customColor, '#000000');
         } 
         else if (colorMode === 'bw') {
           charColor = (brightnessVal > 150) ? "#FFFFFF" : "#000000";
@@ -117,3 +117,7 @@ self.onmessage = (e) => {
   // Post the generated art back to the main thread
   self.postMessage({ htmlOutput, rawTextOutput });
 };
+
+function safeColor(value, fallback) {
+  return (typeof value === 'string' && /^#[0-9a-fA-F]{3,8}$/.test(value)) ? value : fallback;
+}
